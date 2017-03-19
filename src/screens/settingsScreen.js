@@ -4,6 +4,20 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, TouchableHighlight as Button, Image} from 'react-native';
 
 export default class Settings extends Component {
+
+  static navigationOptions = {
+    title: 'Settings',
+    tabBar: {
+      icon: ({ tintColor, focused }) => (
+        <Icon
+          name={focused?'person-outline':'person'}
+          color={focused ? tintColor:'black'}
+        />
+      ),
+    },
+  }
+
+
     render() {
         return (
             <View style={styles.container}>

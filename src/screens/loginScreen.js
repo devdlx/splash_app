@@ -134,10 +134,10 @@ class Login extends Component {
         switch (state.user.loginState) {
 
             case 'LOGGEDIN':
-                this.props.navigation.dispatch(NavigationActions.reset({
-                    index: 0,
-                    actions: [NavigationActions.navigate({routeName: 'Main'})]
-                }),);
+                // this.props.navigation.dispatch(NavigationActions.reset({
+                //     index: 0,
+                //     actions: [NavigationActions.navigate({routeName: 'Main'})]
+                // }),);
                 break;
 
             case 'AUTHERROR':

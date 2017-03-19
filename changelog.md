@@ -1,3 +1,15 @@
+* 03-19-17
+
+  appScreen: added more tab options
+
+  homeScreen: added tab Icon
+
+  profileScreen: added tab Icon
+
+  setup.js: restructured navigation [react-navigation.navigate.replace issue solved](https://gist.github.com/devdlx/039cf28a7ea49c4b691f69a6ab380997)
+
+  
+
 * 03-18-17
 
   updated login/logout, added actions to each screen to handle ‘userActions.loggedin/loggedout’
@@ -19,5 +31,3 @@
   user reducers: cleanup.
 
   homeScreen: updated UI. cleanup.
-
-  

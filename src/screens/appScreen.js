@@ -4,7 +4,7 @@ import React, {Component, PropTypes} from 'react'
 import {Text, StyleSheet, StatusBar, Platform, View} from 'react-native';
 
 import {bindActionCreators} from 'redux'
-import {connect} from 'react-redux'
+import {connect, Provider} from 'react-redux'
 
 import * as actions from '../actions'
 import store from '../store'
@@ -15,7 +15,7 @@ import Splash from './splashScreen'
 import Settings from './settingsScreen'
 import Profile from './profileScreen'
 
-import {Router, Scene, StackNavigator, TabNavigator} from 'react-navigation';
+import {Router, Scene, StackNavigator, TabNavigator, CardStack} from 'react-navigation';
 
 const mainTabs = TabNavigator({
     Home: {
@@ -26,28 +26,49 @@ const mainTabs = TabNavigator({
     //   screen: MyNotificationsScreen,
     //   path: 'notifications',
     // },
-    Settings: {
-        screen: Settings,
-        path: 'settings'
-    },
+
     Profile: {
         screen: Profile,
         path: 'profile'
     }
 }, {
     // Change this to start on a different tab
-    initialRouteName: 'Profile',
+    initialRouteName: 'Home',
     // lazyLoad: 'true',
     tabBarPosition: 'bottom',
     tabBarOptions: {
-        activeTintColor: '#e91e63',
+        showLabel: false,
+        showIcon: true,
+        activeTintColor: 'red',
         labelStyle: {
-            fontSize: 12
+            // fontSize: 18,
+            fontWeight: 'bold',
+            color: 'black'
         },
         style: {
-            backgroundColor: 'transparent'
+            backgroundColor: 'white'
+        },
+        indicatorStyle: {
+            backgroundColor: 'red'
         }
     }
+});
+
+const MainNavigator = StackNavigator({
+    Tabs: {
+        screen: mainTabs
+    },
+
+    Settings: {
+        screen: Settings,
+        path: 'settings'
+    }
+}, {
+    initialRouteName: 'Tabs',
+    // headerMode: 'none',
+    mode: Platform.OS === 'ios'
+        ? 'modal'
+        : 'card'
 });
 
 const AppNavigator = StackNavigator({
@@ -57,7 +78,7 @@ const AppNavigator = StackNavigator({
     },
 
     Main: {
-        screen: mainTabs
+        screen: MainNavigator
     },
 
     Index: {
@@ -72,11 +93,10 @@ const AppNavigator = StackNavigator({
         : 'card'
 });
 
-class App extends Component {
+export default class App extends Component {
 
     constructor(props) {
         super(props);
-        this.props.actions.startListeningToAuth();
     }
 
     componentDidMount() {
@@ -86,28 +106,30 @@ class App extends Component {
     componentWillUnmount() {}
 
     render() {
-        const {actions, state} = this.props
+        // const {actions, state} = this.props
         // console.log(this.props.state.user);
 
         return (
-            <AppNavigator></AppNavigator>
+            <Provider store={store}>
+                <AppNavigator></AppNavigator>
+            </Provider>
         )
     }
 }
 
-App.propTypes = {
-    actions: PropTypes.object.isRequired,
-    state: PropTypes.object.isRequired
-}
-
-function mapStateToProps(state) {
-    return {state}
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        actions: bindActionCreators(actions, dispatch)
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+// App.propTypes = {
+//     actions: PropTypes.object.isRequired,
+//     state: PropTypes.object.isRequired
+// }
+//
+// function mapStateToProps(state) {
+//     return {state}
+// }
+//
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         actions: bindActionCreators(actions, dispatch)
+//     }
+// }
+//
+// connect(mapStateToProps, mapDispatchToProps)(App)

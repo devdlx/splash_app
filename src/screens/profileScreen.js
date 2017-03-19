@@ -20,6 +20,18 @@ import {NavigationActions} from 'react-navigation'
 
 class Profile extends Component {
 
+
+  static navigationOptions = {
+    tabBar: {
+      icon: ({ tintColor, focused }) => (
+        <Icon
+          name={focused?'person-outline':'person'}
+          color={focused ? tintColor:'black'}
+        />
+      ),
+    },
+  }
+
     constructor(props) {
         super(props);
     }
@@ -28,10 +40,15 @@ class Profile extends Component {
 
     componentWillUnmount() {}
 
-    // shouldComponentUpdate(newState, oldState) {
-    //   console.log(newState, oldState);
-    //     return true
-    // }
+    shouldComponentUpdate(newProps, newState) {
+        // console.log(newProps.user === this.props.user);
+        if (newProps.user === this.props.user) {
+            return false;
+
+        }
+        return true;
+
+    }
 
     onEndReached = () => {
         // console.log(this.props);
@@ -39,15 +56,18 @@ class Profile extends Component {
 
     loggoutButtonPress() {
         this.props.actions.loggout();
-        this.props.navigation.dispatch(NavigationActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({routeName: 'Login'})]
-        }),);
+
+    }
+
+
+    settingsButtonPress(){
+      // console.log('settingsButtonPress ', this.props.navigation);
+      this.props.navigation.navigate('Settings')
     }
 
     render() {
 
-        const {user} = this.props.state.user
+        const {user} = this.props.state
         // console.log(user);
         let {height, width} = Dimensions.get('window');
 
@@ -67,7 +87,7 @@ class Profile extends Component {
                                 width: 100,
                                 borderRadius: 50
                             }} source={{
-                                uri: user.photoURL
+                                uri: user && user.photoURL
                                     ? user.photoURL
                                     : 'https://shoutem.github.io/img/ui-toolkit/examples/image-4.png'
                             }}/>
@@ -75,7 +95,7 @@ class Profile extends Component {
                             <Text style={{
                                 margin: 8,
                                 color: 'black'
-                            }}>{user.email}</Text>
+                            }}>{'user.email'}</Text>
                         </View>
 
                         <View style={styles.buttonsWrapper}>
@@ -83,9 +103,7 @@ class Profile extends Component {
                             <TouchableOpacity style={styles.cardButton} onPress={() => {
                                 this.likeButtonPress(item)
                             }}>
-                                <Icon name={'favorite'} color={user.liked
-                                    ? styles.likeButtonTextLiked.color
-                                    : styles.cardButtonText.color}></Icon>
+                                <Icon name={'favorite'} color={'red'}></Icon>
                             </TouchableOpacity>
 
                             <TouchableOpacity style={styles.cardButton} onPress={() => {
@@ -106,11 +124,17 @@ class Profile extends Component {
 
                         </View>
 
-                        <Text style={styles.cardDestriptionText}>
-                            {user.description}
-                        </Text>
-
                     </View>
+
+                    <Text style={styles.cardDestriptionText}>{'user.description'}</Text>
+
+                      <TouchableOpacity style={styles.cardButton} onPress={() => {
+                          this.settingsButtonPress()
+                      }}>
+
+                          <Icon name={'settings'} color={styles.cardButtonText.color}></Icon>
+
+                      </TouchableOpacity>
 
                 </Card>
 

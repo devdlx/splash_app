@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import {StyleSheet, Text, View, DrawerLayoutAndroid} from 'react-native';
 import {Provider} from 'react-redux'
 
 import store from '../../store'

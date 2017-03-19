@@ -21,12 +21,24 @@ import * as actions from '../actions'
 
 class Home extends Component {
 
+  static navigationOptions = {
+    tabBar: {
+      icon: ({ tintColor, focused }) => (
+        <Icon
+          name={'home'}
+          color={focused ? tintColor:'black'}
+        />
+      ),
+    },
+  }
+
+
     constructor(props) {
         super(props);
     }
 
     componentDidMount() {
-        this.props.actions.fetchHomeItems();
+        // this.props.actions.fetchHomeItems();
     }
 
     componentWillUnmount() {}
@@ -131,6 +143,8 @@ class Home extends Component {
     render() {
 
         const {state} = this.props
+
+        // console.log(state);
         // console.log('home.items:', state.home.length);
         // const listItems = items.map((item, index) => this.renderCard(item, index));
 

@@ -8,6 +8,8 @@ import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import * as actions from '../actions'
 import {NavigationActions} from 'react-navigation'
+
+
 class Splash extends Component {
 
     constructor(props) {
@@ -17,17 +19,17 @@ class Splash extends Component {
     componentDidMount() {
         // const {navigate} = this.props.navigation;
         // console.log(navigate('Login'));
-
+        // this.props.actions.startListeningToAuth();
     }
 
     componentWillUnmount() {}
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate1(nextProps, nextState) {
         // console.log(nextState, nextProps);
 
         const {state, navigation} = nextProps;
 
-        console.log(state);
+        // console.log(state);
 
         switch (state.user.loginState) {
 
@@ -35,21 +37,21 @@ class Splash extends Component {
                 // console.log(navigation.navigate('Login'));
                 // navigation.navigate('Login', {}, 'Navigation/RESET');
                 // setTimeout( ()=> {
-                this.props.navigation.dispatch(NavigationActions.reset({
-                    index: 0,
-                    actions: [NavigationActions.navigate({routeName: 'Login'})]
-                }),);
+                // this.props.navigation.dispatch(NavigationActions.reset({
+                //     index: 0,
+                //     actions: [NavigationActions.navigate({routeName: 'Login'})]
+                // }),);
                 // }, 1000);
+
 
                 break;
 
             case 'LOGGEDIN':
                 // setTimeout( ()=> {
-                this.props.navigation.dispatch(NavigationActions.reset({
-                    index: 0,
-                    actions: [NavigationActions.navigate({routeName: 'Main'})]
-                }),);
-
+                // this.props.navigation.dispatch(NavigationActions.reset({
+                //     index: 0,
+                //     actions: [NavigationActions.navigate({routeName: 'Main'})]
+                // }),);
 
                 // }, 1000);
                 break;
@@ -62,6 +64,7 @@ class Splash extends Component {
     }
 
     render() {
+
 
         return (
             <View style={styles.container}>

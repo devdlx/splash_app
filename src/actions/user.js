@@ -7,17 +7,17 @@ import {
 import * as UserActionTypes from '../constants/UserActionTypes';
 
 export function startListeningToAuth() {
-
+    // console.log('*** startListeningToAuth');
     // console.log('navigation =>', navigation);
     return function(dispatch, getState) {
         firebaseAppRef.auth().onAuthStateChanged(function(user) {
             if (user) {
-                console.log('User is signed in.');
+                // console.log('User is signed in.');
                 // console.log(user);
                 listenToUserUpdatesOn(dispatch, user);
 
             } else {
-                console.log('No user is signed in bro.');
+                // console.log('No user is signed in bro.');
                 listenToUserUpdatesOff(dispatch, '')
             }
         });
@@ -29,15 +29,15 @@ export function authWithEmail(email, password) {
     // console.log(email);
     return function(dispatch, getState) {
         firebaseAppRef.auth().signInWithEmailAndPassword(email, password)
-            .then((user) => {
-                // console.log(' {user} => ', user);
-
-                // dispatch({
-                //     type: UserActionTypes.LOGGEDIN,
-                // newUserState: user,
-                // });
-
-            })
+            // .then((user) => {
+            //     // console.log(' {user} => ', user);
+            //
+            //     // dispatch({
+            //     //     type: UserActionTypes.LOGGEDIN,
+            //     // newUserState: user,
+            //     // });
+            //
+            // })
             .catch((err) => {
 
                 dispatch({
@@ -65,6 +65,11 @@ export function loggout() {
 
 }
 
+function refUserLocation(uid) {
+    return `user/${uid}`
+}
+
+let userRef;
 
 
 let _listenToUserUpdatesOn = false;
@@ -73,20 +78,27 @@ function listenToUserUpdatesOn(dispatch, user) {
 
     const uid = user.uid;
 
-    console.log('_listenToUserUpdatesOn => ', _listenToUserUpdatesOn);
+    // console.log('_listenToUserUpdatesOn => ', _listenToUserUpdatesOn);
 
     if (_listenToUserUpdatesOn) {
         return;
     }
     _listenToUserUpdatesOn = true;
 
-    const refUserLocation = `user/${uid}`
+    userRef = firebaseAppRef.database().ref(refUserLocation(uid));
 
-    firebaseAppRef.database().ref(refUserLocation).on('child_changed', (NewChild) => {
-        // update user state when change happens
+    // Get User profile by 'uid' and listen for updates
+    userRef.on('value', (userProfile) => {
+
+        // console.log('userProfile.val() => ', userProfile.val());
+        // console.log('dispatch: ', {
+        //     type: UserActionTypes.UPDATE_USER_PROFILE,
+        //     ...userProfile.val()
+        // });
+
         dispatch({
             type: UserActionTypes.UPDATE_USER_PROFILE,
-            newUserProfileState: NewChild.val(),
+            profile: userProfile.val(),
         });
     });
 
@@ -94,8 +106,6 @@ function listenToUserUpdatesOn(dispatch, user) {
     dispatch({
         type: UserActionTypes.LOGGEDIN,
         uid: user.uid,
-        user: user,
-        displayName: user.displayName || ''
     });
 
 
@@ -111,15 +121,16 @@ function listenToUserUpdatesOn(dispatch, user) {
 
 
 function listenToUserUpdatesOff(dispatch, uid = '') {
-    console.log('listenToUserUpdatesOff()');
+    // console.log('listenToUserUpdatesOff()');
     // if (!_listenToUserUpdatesOn) {
     //     return;
     // }
     _listenToUserUpdatesOn = false;
 
-    const refUserLocation = `user/${uid}`
     // Stop listening to user state changes
-    firebaseAppRef.database().ref(refUserLocation).off();
+    if (userRef) {
+        userRef.off();
+    }
 
     // reset use state
     dispatch({

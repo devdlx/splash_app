@@ -12,6 +12,6 @@ import {
   View
 } from 'react-native';
 
-import Root from './src/components/Root';
+import setup from './src/screens/setup'
 
-AppRegistry.registerComponent('splash_app', () => Root);
+AppRegistry.registerComponent('splash_app', () => setup);
