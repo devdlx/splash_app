@@ -8,13 +8,15 @@ import {
     ScrollView,
     Image,
     Platform,
-    ListView
+    Dimensions,
+    TouchableOpacity
 } from 'react-native';
 
 import {Card, List, ListItem, Button, Icon} from 'react-native-elements'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import * as actions from '../actions'
+import {NavigationActions} from 'react-navigation'
 
 class Profile extends Component {
 
@@ -26,64 +28,114 @@ class Profile extends Component {
 
     componentWillUnmount() {}
 
-    // shouldComponentUpdate(one) {
+    // shouldComponentUpdate(newState, oldState) {
+    //   console.log(newState, oldState);
     //     return true
     // }
 
     onEndReached = () => {
-
         // console.log(this.props);
     }
 
-    renderCard(item, index) {
-
-        return (
-
-            <Card image={{
-                uri: item.image || 'https://shoutem.github.io/img/ui-toolkit/examples/image-4.png'
-            }} title={item.title} containerStyle={styles.card} wrapperStyle={styles.wrapperStyle} key={index}>
-
-                <Text style={{
-                    marginBottom: 12,
-                    padding: 12
-                }}>
-                    {item.description}
-                </Text>
-
-                <Button icon={{
-                    name: 'textsms'
-                }} backgroundColor='rgb(70, 100, 118)' fontFamily='Lato' buttonStyle={{
-                    borderRadius: 0,
-                    marginLeft: 0,
-                    marginRight: 0,
-                    marginBottom: 0
-                }} title='VIEW NOW'/>
-            </Card>
-
-        )
+    loggoutButtonPress() {
+        this.props.actions.loggout();
+        this.props.navigation.dispatch(NavigationActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({routeName: 'Login'})]
+        }),);
     }
 
     render() {
 
-        const {state} = this.props
-        // console.log('home.items:', state.home.length);
+        const {user} = this.props.state.user
+        // console.log(user);
+        let {height, width} = Dimensions.get('window');
 
         return (
-            <View>
-                <Text>some text on the profile screen</Text>
-            </View>
+            <ScrollView>
+
+                <Card containerStyle={styles.cardContainer} wrapperStyle={styles.cardWrapperStyle}>
+
+                    <View style={styles.cardContentWrapper}>
+
+                        <View style={{
+                            marginRight: 24,
+                            marginLeft: 8
+                        }}>
+                            <Image style={{
+                                height: 100,
+                                width: 100,
+                                borderRadius: 50
+                            }} source={{
+                                uri: user.photoURL
+                                    ? user.photoURL
+                                    : 'https://shoutem.github.io/img/ui-toolkit/examples/image-4.png'
+                            }}/>
+
+                            <Text style={{
+                                margin: 8,
+                                color: 'black'
+                            }}>{user.email}</Text>
+                        </View>
+
+                        <View style={styles.buttonsWrapper}>
+
+                            <TouchableOpacity style={styles.cardButton} onPress={() => {
+                                this.likeButtonPress(item)
+                            }}>
+                                <Icon name={'favorite'} color={user.liked
+                                    ? styles.likeButtonTextLiked.color
+                                    : styles.cardButtonText.color}></Icon>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.cardButton} onPress={() => {
+                                this.shareProfileButtonPress(user)
+                            }}>
+                                <View>
+                                    <Icon name={'share'} color={styles.cardButtonText.color}></Icon>
+                                </View>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.cardButton} onPress={() => {
+                                this.loggoutButtonPress()
+                            }}>
+
+                                <Icon name={'remove-circle-outline'} color={styles.cardButtonText.color}></Icon>
+
+                            </TouchableOpacity>
+
+                        </View>
+
+                        <Text style={styles.cardDestriptionText}>
+                            {user.description}
+                        </Text>
+
+                    </View>
+
+                </Card>
+
+            </ScrollView>
         );
     }
 }
 
 const styles = {
 
-    card: {
-        marginVertical: 8,
-        borderColor: 'red',
+    container: {
+        flex: 1,
+        flexGrow: 1,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // backgroundColor: 'orange'
+    },
+
+    cardContainer: {
+        // marginVertical: 8,
+        // borderColor: 'red',
         borderWidth: 0,
         margin: 0,
         padding: 0,
+
         ...Platform.select({
             ios: {
                 shadowOffset: {
@@ -97,9 +149,74 @@ const styles = {
                 elevation: 0
             }
         })
+
     },
-    wrapperStyle: {
-        padding: 10
+
+    cardImageStyle: {
+        height: 350
+    },
+
+    cardWrapperStyle: {
+        padding: 0
+    },
+
+    cardContentWrapper: {
+        flexDirection: 'row',
+        padding: 8
+    },
+
+    buttonsWrapper: {
+        flex: 1,
+        marginBottom: 12,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        // backgroundColor: 'green'
+    },
+
+    cardButton: {
+        borderRadius: 0,
+        margin: 0,
+        marginRight: 8,
+        padding: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        // backgroundColor: 'green'
+
+    },
+
+    cardButtonText: {
+        color: 'black',
+        // fontSize: 24
+    },
+
+    likeButton: {},
+
+    likeButtonLiked: {},
+
+    likeButtonTextLiked: {
+        color: 'red'
+    },
+
+    shareButton: {},
+
+    cardLikesText: {
+        paddingLeft: 12,
+        paddingBottom: 8,
+        fontSize: 12,
+        fontWeight: 'bold'
+    },
+
+    cardDestriptionText: {
+        paddingHorizontal: 12,
+        paddingBottom: 12
+    },
+
+    cardTimeAgoText: {
+        paddingLeft: 12,
+        paddingBottom: 8,
+        fontSize: 8,
+        color: 'grey'
     }
 };
 

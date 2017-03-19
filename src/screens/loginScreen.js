@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import Video from 'react-native-video';
+import {NavigationActions} from 'react-navigation'
 
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
@@ -100,9 +101,9 @@ class Login extends Component {
         super(props);
         this.state = {
             checkingAuth: false,
-            username: '',
-            password: '',
-            title: 'some text',
+            username: 'cw@gmail.com',
+            password: '123456',
+            title: 'TITLE OF APP',
             error: ''
         }
     }
@@ -132,6 +133,13 @@ class Login extends Component {
 
         switch (state.user.loginState) {
 
+            case 'LOGGEDIN':
+                this.props.navigation.dispatch(NavigationActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({routeName: 'Main'})]
+                }),);
+                break;
+
             case 'AUTHERROR':
                 // this.state.checkingAuth = false
                 this.setState({error: state.user.error});
@@ -141,7 +149,6 @@ class Login extends Component {
             default:
 
         }
-
         return true;
     }
 
@@ -185,11 +192,11 @@ class Login extends Component {
 
                         <TextInput ref="1" style={styles.formInput} placeholder="Username" placeholderTextColor="rgba(255,255,255,0.2)" returnKeyType="next" onSubmitEditing={() => this.focusNextField('2')} keyboardType="email-address" autoCorrect={false} disabled={this.state.checkingAuth} onChangeText={(username) => {
                             this.setState({username})
-                        }}></TextInput>
+                        }} value={this.state.username}></TextInput>
 
                         <TextInput ref="2" placeholder="Password" placeholderTextColor="rgba(255,255,255,0.2)" style={styles.formInput} returnKeyType="send" onSubmitEditing={() => this.actionLogin()} secureTextEntry disabled={this.state.checkingAuth} onChangeText={(password) => {
                             this.setState({password})
-                        }}></TextInput>
+                        }} value={this.state.password}></TextInput>
 
                         <TouchableOpacity style={styles.buttonLoginContainer} onPress={this.actionLogin} disabled={this.state.checkingAuth}>
                             <Text style={styles.buttonLoginText}>Login</Text>

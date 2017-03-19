@@ -35,21 +35,23 @@ class Splash extends Component {
                 // console.log(navigation.navigate('Login'));
                 // navigation.navigate('Login', {}, 'Navigation/RESET');
                 // setTimeout( ()=> {
-                  this.props.navigation.dispatch(NavigationActions.reset({
-                      index: 0,
-                      actions: [NavigationActions.navigate({routeName: 'Login'})]
-                  }),);
+                this.props.navigation.dispatch(NavigationActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({routeName: 'Login'})]
+                }),);
                 // }, 1000);
 
                 break;
 
             case 'LOGGEDIN':
-            // setTimeout( ()=> {
-              this.props.navigation.dispatch(NavigationActions.reset({
-                  index: 0,
-                  actions: [NavigationActions.navigate({routeName: 'Main'})]
-              }),);
-            // }, 1000);
+                // setTimeout( ()=> {
+                this.props.navigation.dispatch(NavigationActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({routeName: 'Main'})]
+                }),);
+
+
+                // }, 1000);
                 break;
 
             default:

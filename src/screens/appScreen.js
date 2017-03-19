@@ -13,14 +13,14 @@ import Login from './loginScreen'
 import Home from './homeScreen'
 import Splash from './splashScreen'
 import Settings from './settingsScreen'
+import Profile from './profileScreen'
 
 import {Router, Scene, StackNavigator, TabNavigator} from 'react-navigation';
 
 const mainTabs = TabNavigator({
     Home: {
         screen: Home,
-        path: 'home',
-        
+        path: 'home'
     },
     // Notifications: {
     //   screen: MyNotificationsScreen,
@@ -29,10 +29,25 @@ const mainTabs = TabNavigator({
     Settings: {
         screen: Settings,
         path: 'settings'
+    },
+    Profile: {
+        screen: Profile,
+        path: 'profile'
     }
 }, {
     // Change this to start on a different tab
-    initialRouteName: 'Home'
+    initialRouteName: 'Profile',
+    // lazyLoad: 'true',
+    tabBarPosition: 'bottom',
+    tabBarOptions: {
+        activeTintColor: '#e91e63',
+        labelStyle: {
+            fontSize: 12
+        },
+        style: {
+            backgroundColor: 'transparent'
+        }
+    }
 });
 
 const AppNavigator = StackNavigator({

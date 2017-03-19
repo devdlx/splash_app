@@ -1,4 +1,5 @@
 /* @flow */
+import moment from 'moment'
 
 import React, {Component, PropTypes} from 'react';
 import {
@@ -8,7 +9,9 @@ import {
     ScrollView,
     Image,
     Platform,
-    ListView
+    ListView,
+    TouchableOpacity,
+    Dimensions
 } from 'react-native';
 
 import {Card, List, ListItem, Button, Icon} from 'react-native-elements'
@@ -22,44 +25,104 @@ class Home extends Component {
         super(props);
     }
 
-    componentDidMount = () => {
-        this.props.actions.fetchHomeItems()
+    componentDidMount() {
+        this.props.actions.fetchHomeItems();
     }
 
     componentWillUnmount() {}
 
-    // shouldComponentUpdate(one) {
+    // shouldComponentUpdate(one, two) {
+    //   console.log(one, two, this.props.state);
     //     return true
     // }
 
-    onEndReached = () => {
+    onEndReached() {
         this.props.actions.fetchHomeItems();
-        // console.log(this.props);
     }
 
-    renderCard(item, index) {
+    likeButtonPress(item, index) {
+        this.props.actions.likePost(item, 'home', index);
+    }
+
+    shareButtonPress(evt) {}
+
+    renderLikesText(likes) {
+      if (!likes) {
+          return;
+      }
+        return (
+            <Text style={styles.cardLikesText}>{likes}{' Likes'}</Text>
+        )
+    }
+
+    renderTimeAgoText(date) {
+        if (!date) {
+            return;
+        }
+        return (
+            // <Text style={styles.cardTimeAgoText}>{moment(date).fromNow()}</Text>
+            <Text style={styles.cardTimeAgoText}>{date}</Text>
+        )
+    }
+
+    renderCard(item, sectionID, rowID) {
+        // console.log(item.likes && item.likes.byUser && item.likes.byUser[this.props.state.user.uid]);
+        let liked = false;
+        if (item.likes && item.likes.byUser && item.likes.byUser[this.props.state.user.uid]) {
+            liked = item.likes.byUser[this.props.state.user.uid];
+        }
+        // console.log(liked);
+
+        let {height, width} = Dimensions.get('window');
 
         return (
 
             <Card image={{
                 uri: item.image || 'https://shoutem.github.io/img/ui-toolkit/examples/image-4.png'
-            }} title={item.title} containerStyle={styles.card} wrapperStyle={styles.wrapperStyle} key={index}>
+            }} containerStyle={styles.cardContainer} wrapperStyle={styles.cardWrapperStyle} imageStyle={{
+                height: width
+            }} key={rowID}>
+                <View style={styles.cardContentWrapper}>
+                    <View style={styles.buttonsWrapper}>
 
-                <Text style={{
-                    marginBottom: 12,
-                    padding: 12
-                }}>
-                    {item.description}
-                </Text>
+                        <TouchableOpacity style={styles.cardButton} onPress={() => {
+                            this.likeButtonPress(item, rowID)
+                        }}>
 
-                <Button icon={{
-                    name: 'textsms'
-                }} backgroundColor='rgb(70, 100, 118)' fontFamily='Lato' buttonStyle={{
-                    borderRadius: 0,
-                    marginLeft: 0,
-                    marginRight: 0,
-                    marginBottom: 0
-                }} title='VIEW NOW'/>
+                            <Icon name={'favorite'} color={liked
+                                ? styles.likeButtonTextLiked.color
+                                : styles.cardButtonText.color}></Icon>
+
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.cardButton} onPress={() => {
+                            this.commentButtonPress(item, rowID)
+                        }}>
+
+                            <Icon name={'comment'} color={styles.cardButtonText.color}></Icon>
+
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.cardButton} onPress={() => {
+                            this.shareButtonPress(item, rowID)
+                        }}>
+                            <View>
+                                <Icon name={'share'} color={styles.cardButtonText.color}></Icon>
+                            </View>
+                        </TouchableOpacity>
+
+                    </View>
+
+                    {this.renderLikesText(item.likeCount)}
+
+                    <Text style={styles.cardDestriptionText}>
+                        {item.description}
+                    </Text>
+
+                    {this.renderTimeAgoText(item.date)}
+
+                </View>
+
             </Card>
 
         )
@@ -68,18 +131,18 @@ class Home extends Component {
     render() {
 
         const {state} = this.props
-        console.log('home.items:', state.home.length);
+        // console.log('home.items:', state.home.length);
         // const listItems = items.map((item, index) => this.renderCard(item, index));
 
         var dataSource = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
 
-        let ds = dataSource.cloneWithRows(state.home)
+        let ds = dataSource.cloneWithRows(state.home.items)
 
         return (
             <View style={styles.container}>
-                <ListView enableEmptySections dataSource={ds} renderRow={this.renderCard} renderSectionHeader={this.renderSectionHeader} onEndReached={this.onEndReached}/>
+                <ListView enableEmptySections dataSource={ds} renderRow={this.renderCard.bind(this)} renderSectionHeader={this.renderSectionHeader} onEndReached={this.onEndReached.bind(this)}/>
             </View>
         );
     }
@@ -90,17 +153,18 @@ const styles = {
     container: {
         flex: 1,
         flexGrow: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'orange'
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // backgroundColor: 'orange'
     },
 
-    card: {
-        marginVertical: 8,
-        borderColor: 'red',
+    cardContainer: {
+        // marginVertical: 8,
+        // borderColor: 'red',
         borderWidth: 0,
         margin: 0,
         padding: 0,
+
         ...Platform.select({
             ios: {
                 shadowOffset: {
@@ -114,9 +178,73 @@ const styles = {
                 elevation: 0
             }
         })
+
     },
-    wrapperStyle: {
-        padding: 10
+
+    cardImageStyle: {
+        height: 350
+    },
+
+    cardWrapperStyle: {
+        padding: 0
+    },
+
+    cardContentWrapper: {
+        padding: 8
+    },
+
+    buttonsWrapper: {
+        flex: 1,
+        marginBottom: 12,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        // backgroundColor: 'green'
+    },
+
+    cardButton: {
+        borderRadius: 0,
+        margin: 0,
+        marginRight: 8,
+        padding: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        // backgroundColor: 'green'
+
+    },
+
+    cardButtonText: {
+        color: 'black',
+        // fontSize: 24
+    },
+
+    likeButton: {},
+
+    likeButtonLiked: {},
+
+    likeButtonTextLiked: {
+        color: 'red'
+    },
+
+    shareButton: {},
+
+    cardLikesText: {
+        paddingLeft: 12,
+        paddingBottom: 8,
+        fontSize: 12,
+        fontWeight: 'bold'
+    },
+
+    cardDestriptionText: {
+        paddingHorizontal: 12,
+        paddingBottom: 12
+    },
+
+    cardTimeAgoText: {
+        paddingLeft: 12,
+        paddingBottom: 8,
+        fontSize: 8,
+        color: 'grey'
     }
 };
 

@@ -6,3 +6,5 @@ export const ISADMIN = 'ISADMIN';
 
 
 export const AUTHERROR = 'AUTHERROR';
+
+export const UPDATE_USER_PROFILE = 'UPDATE_USER_PROFILE';
