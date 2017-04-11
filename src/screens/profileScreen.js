@@ -17,6 +17,7 @@ import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import * as actions from '../actions'
 import {NavigationActions} from 'react-navigation'
+import ScreenContainer from './screenContainer'
 
 class Profile extends Component {
 
@@ -72,8 +73,8 @@ class Profile extends Component {
         let {height, width} = Dimensions.get('window');
 
         return (
+          <ScreenContainer >
             <ScrollView>
-
                 <Card containerStyle={styles.cardContainer} wrapperStyle={styles.cardWrapperStyle}>
 
                     <View style={styles.cardContentWrapper}>
@@ -139,6 +140,7 @@ class Profile extends Component {
                 </Card>
 
             </ScrollView>
+            </ScreenContainer>
         );
     }
 }
@@ -160,19 +162,19 @@ const styles = {
         margin: 0,
         padding: 0,
 
-        ...Platform.select({
-            ios: {
-                shadowOffset: {
-                    height: 0,
-                    width: 0
-                },
-                shadowOpacity: 0,
-                shadowRadius: 0
-            },
-            android: {
-                elevation: 0
-            }
-        })
+        // ...Platform.select({
+        //     ios: {
+        //         shadowOffset: {
+        //             height: 0,
+        //             width: 0
+        //         },
+        //         shadowOpacity: 0,
+        //         shadowRadius: 0
+        //     },
+        //     android: {
+        //         elevation: 0
+        //     }
+        // })
 
     },
 

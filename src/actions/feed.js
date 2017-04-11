@@ -5,14 +5,14 @@ let lastKey;
 // let called = 0
 
 
-export function fetchHomeItems(nextPage) {
-    // console.log('fetchHomeItems : lastKey => ', lastKey);
+export function fetchFeedItems(nextPage) {
+    // console.log('fetchFeedItems : lastKey => ', lastKey);
     // called++
     // console.log('called => ', called);
     return function(dispatch, getState) {
 
-        if (!_listenToHomeItemsChanges) {
-            listenToHomeItemsChanges(dispatch)
+        if (!_listenToFeedItemsChanges) {
+            listenToFeedItemsChanges(dispatch)
         }
 
         let newItems = []
@@ -25,8 +25,8 @@ export function fetchHomeItems(nextPage) {
             .on("child_added", (snapshot, _lastKey) => {
                 lastKey = _lastKey
 
-                if (getState().home.items.findIndex(x => x.key === snapshot.key) < 0) {
-                    // console.log(getState().home.items.findIndex(x => x.key === snapshot.key));
+                if (getState().feed.items.findIndex(x => x.key === snapshot.key) < 0) {
+                    // console.log(getState().feed.items.findIndex(x => x.key === snapshot.key));
                     let likeCount = snapshot.child('likes/byUser').numChildren();
                     // console.log(likeCount);
 
@@ -48,12 +48,12 @@ export function fetchHomeItems(nextPage) {
 
 }
 
-let _listenToHomeItemsChanges = false
+let _listenToFeedItemsChanges = false
 
-function listenToHomeItemsChanges(dispatch) {
-    // console.log(_listenToHomeItemsChanges);
+function listenToFeedItemsChanges(dispatch) {
+    // console.log(_listenToFeedItemsChanges);
 
-    _listenToHomeItemsChanges = true;
+    _listenToFeedItemsChanges = true;
 
     firebaseAppRef.database().ref("items").on('child_changed', (NewChild) => {
 

@@ -4,7 +4,7 @@ import {
 
 import player from './player'
 import user from './user'
-import home from './home'
+import feed from './feed'
 // import firebaseApp from './firebase'
 
 
@@ -12,7 +12,7 @@ import home from './home'
 const rootReducer = combineReducers({
     player,
     user,
-    home
+    feed
     // firebaseApp
 })
 

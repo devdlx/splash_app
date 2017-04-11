@@ -11,7 +11,8 @@ import {
     Platform,
     ListView,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    StatusBar
 } from 'react-native';
 
 import {Card, List, ListItem, Button, Icon} from 'react-native-elements'
@@ -19,26 +20,16 @@ import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 import * as actions from '../actions'
 
-class Home extends Component {
+import ScreenContainer from './screenContainer'
 
-  static navigationOptions = {
-    tabBar: {
-      icon: ({ tintColor, focused }) => (
-        <Icon
-          name={'home'}
-          color={focused ? tintColor:'black'}
-        />
-      ),
-    },
-  }
-
+class Feed extends Component {
 
     constructor(props) {
         super(props);
     }
 
     componentDidMount() {
-        // this.props.actions.fetchHomeItems();
+        // this.props.actions.fetchFeedItems();
     }
 
     componentWillUnmount() {}
@@ -49,11 +40,11 @@ class Home extends Component {
     // }
 
     onEndReached() {
-        this.props.actions.fetchHomeItems();
+        this.props.actions.fetchFeedItems();
     }
 
     likeButtonPress(item, index) {
-        this.props.actions.likePost(item, 'home', index);
+        this.props.actions.likePost(item, 'feed', index);
     }
 
     shareButtonPress(evt) {}
@@ -145,19 +136,19 @@ class Home extends Component {
         const {state} = this.props
 
         // console.log(state);
-        // console.log('home.items:', state.home.length);
+        // console.log('feed.items:', state.feed.length);
         // const listItems = items.map((item, index) => this.renderCard(item, index));
 
         var dataSource = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
 
-        let ds = dataSource.cloneWithRows(state.home.items)
+        let ds = dataSource.cloneWithRows(state.feed.items)
 
         return (
-            <View style={styles.container}>
+            <ScreenContainer style={styles.container}>
                 <ListView enableEmptySections dataSource={ds} renderRow={this.renderCard.bind(this)} renderSectionHeader={this.renderSectionHeader} onEndReached={this.onEndReached.bind(this)}/>
-            </View>
+            </ScreenContainer>
         );
     }
 }
@@ -262,7 +253,7 @@ const styles = {
     }
 };
 
-Home.propTypes = {
+Feed.propTypes = {
     actions: PropTypes.object.isRequired,
     state: PropTypes.object.isRequired
 
@@ -278,4 +269,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(Feed)

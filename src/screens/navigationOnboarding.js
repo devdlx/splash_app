@@ -18,6 +18,9 @@ const OnboardingNavigator = StackNavigator({
     // Tour: {
     //     screen: Tour
     // }
-}, {initialRouteName: 'Login'})
+}, {
+  initialRouteName: 'Login',
+  headerMode: 'none',
+})
 
 export default OnboardingNavigator

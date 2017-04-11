@@ -89,8 +89,8 @@ const AppNavigator = StackNavigator({
     initialRouteName: 'Index',
     headerMode: 'none',
     mode: Platform.OS === 'ios'
-        ? 'modal'
-        : 'card'
+        ? 'card'
+        : 'modal'
 });
 
 export default class App extends Component {

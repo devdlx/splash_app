@@ -47,7 +47,9 @@ const styles = StyleSheet.create({
     title: {
         textAlign: 'center',
         color: 'white',
-        opacity: 0.9
+        opacity: 0.9,
+        backgroundColor: 'transparent'
+
     },
 
     error: {
@@ -55,7 +57,8 @@ const styles = StyleSheet.create({
         color: 'red',
         opacity: 0.8,
         marginBottom: 12,
-        fontSize: 20
+        fontSize: 20,
+        backgroundColor: 'transparent'
     },
 
     formContainer: {
