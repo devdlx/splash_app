@@ -35,7 +35,7 @@ const mainTabs = TabNavigator({
     }
 }, {
     // Change this to start on a different tab
-    initialRouteName: 'Feed',
+    initialRouteName: 'Profile',
     // lazyLoad: 'true',
     tabBarPosition: 'bottom',
     tabBarOptions: {

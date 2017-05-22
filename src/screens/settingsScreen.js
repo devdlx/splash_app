@@ -57,7 +57,7 @@ export default class Settings extends Component {
                         this.likeButtonPress(item, rowID)
                     }}>
 
-                        <Text>text</Text>
+                        <Text style={styles.buttonText}>text</Text>
 
                     </TouchableOpacity>
 
@@ -92,7 +92,7 @@ export default class Settings extends Component {
         // let ds = dataSource.cloneWithRows([])
 
         return (
-            <ScreenContainer style={styles.container}>
+            <ScreenContainer padding={false}>
                 <ListView enableEmptySections dataSource={ds} renderRow={this.renderSettingsItems.bind(this)}/>
             </ScreenContainer>
         );
@@ -100,27 +100,20 @@ export default class Settings extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        // flex: 1,
-        // flexGrow: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        backgroundColor: 'blue'
-    },
+    
 
     itemWrapper: {
         flexDirection: 'row',
         backgroundColor: 'blue',
         alignItems: 'center',
         paddingHorizontal: 16,
-        paddingVertical: 12,
-
+        paddingVertical: 12
     },
 
     itemTitle: {
         flex: 2,
 
-        fontSize:18
+        fontSize: 18
     },
 
     buttonsWrapper: {
@@ -132,7 +125,10 @@ const styles = StyleSheet.create({
     },
 
     button: {
-      marginHorizontal:8
+        marginHorizontal: 8
+    },
+    buttonText: {
+        fontSize: 18
     },
 
     logoContainer: {

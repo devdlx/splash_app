@@ -20,18 +20,28 @@ import * as actions from '../actions'
 
 class ScreenContainer extends Component {
 
+    static propTypes = {
+        style: PropTypes.object,
+        actions: PropTypes.object.isRequired,
+        state: PropTypes.object.isRequired
+    };
+
+    static defaultProps = {
+        style: {},
+        padding: true
+    };
+
     static headerStyle = {
         backgroundColor: 'white'
-
     }
 
     constructor(props) {
         super(props);
-
     }
 
     componentDidMount() {
         // this.props.actions.fetchScreenContainerItems();
+        console.log(this.props.padding);
     }
 
     componentWillUnmount() {}
@@ -42,15 +52,20 @@ class ScreenContainer extends Component {
     // }
 
     componentWillReceiveProps(np) {
-        console.log(np, this.props);
+        console.log('Styles', np, this.props);
         // if (np.style) {
         //     // this.setState({style: Object.assign({}, defaultStyle, np.style)})
         // }
     }
 
     render() {
+        const {style, padding} = this.props
+
         return (
-            <View style={defaultStyle.container}>
+            <View style={[
+                style, defaultStyle.container, padding
+                    ? defaultStyle.padding: {}
+            ]}>
                 <StatusBar backgroundColor="white" animated={true} barStyle="dark-content" translucent={true}/>
                 <View>
                     {this.props.children}
@@ -60,10 +75,6 @@ class ScreenContainer extends Component {
     }
 }
 
-ScreenContainer.defaultProps = {
-    style: defaultStyle
-};
-
 const defaultStyle = {
 
     container: {
@@ -71,7 +82,11 @@ const defaultStyle = {
         flexGrow: 1,
         // justifyContent: 'center',
         // alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: 'white'
+    },
+
+    padding: {
+
         ...Platform.select({
             ios: {
                 // backgroundColor: 'orange',
@@ -81,6 +96,7 @@ const defaultStyle = {
                 elevation: 0
             }
         })
+
     },
 
     buttonsWrapper: {
@@ -100,7 +116,6 @@ const defaultStyle = {
         justifyContent: 'center',
         alignItems: 'center',
         // backgroundColor: 'green'
-
     },
 
     buttonsText: {
@@ -108,12 +123,6 @@ const defaultStyle = {
         // fontSize: 24
     }
 };
-
-ScreenContainer.propTypes = {
-    actions: PropTypes.object.isRequired,
-    state: PropTypes.object.isRequired
-
-}
 
 function mapStateToProps(state) {
     return {state}
